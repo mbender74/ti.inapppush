@@ -49,7 +49,7 @@ inAppPushModule.setupPush({
 		teamId:'YYYYYYYYYY', // your Apple Developer teamId
 		bundleId:'your.app.bundleid', // the bundleId of your app
 		environment:'development', // 'development' (sandbox) or 'production'
-		p8FilePath:Ti.Filesystem.resourcesDirectory+'AuthKey_XXXXXXXXXX.p8' // your p8 authKeyFile -> https://developer.apple.com/account/resources/authkeys/list
+		p8FilePath:Ti.Filesystem.resourcesDirectory+'keyfile.p8' // your p8 authKeyFile -> https://developer.apple.com/account/resources/authkeys/list
 });
   
 
