@@ -100,6 +100,15 @@ class DeMarcbenderInapppushModule: TiModule {
           let fileURL = URL(fileURLWithPath: _p8FilePath)
           _p8FileName = fileURL.lastPathComponent
           _p8PrivateKey = try? P8.getPrivateKey(fromP8: _p8FilePath)
+                    
+          if (_jwtToken == nil){
+              let authToken = AuthenticationToken(keyId: keyId!, teamId: teamId!)
+              if let privateKey = _p8PrivateKey {
+                  _jwtToken = try! authToken.generateJWTToken(fromP8PrivateKey: privateKey)
+              } else {
+                  _jwtToken = try! authToken.generateJWTToken(fromP8: _p8FilePath)
+              }
+          }
       }
       resetConnect()
   }
@@ -152,22 +161,26 @@ class DeMarcbenderInapppushModule: TiModule {
             return
         }
         if (deviceToken != nil && payload != nil){
-            let jwtToken: JWT.Token
-            if let token = _jwtToken, !token.isExpired {
-                jwtToken = token
-            } else {
+            
+            if !_jwtToken.isExpired {
+                NSLog("[DEBUG] !_jwtToken.isExpired:")
+                NSLog("[DEBUG] new Token")
+
                 let authToken = AuthenticationToken(keyId: keyId!, teamId: teamId!)
                 if let privateKey = _p8PrivateKey {
-                    jwtToken = try! authToken.generateJWTToken(fromP8PrivateKey: privateKey)
+                    _jwtToken = try! authToken.generateJWTToken(fromP8PrivateKey: privateKey)
                 } else {
-                    jwtToken = try! authToken.generateJWTToken(fromP8: _p8FilePath)
+                    _jwtToken = try! authToken.generateJWTToken(fromP8: _p8FilePath)
                 }
             }
-           
+
+            let jwtToken = _jwtToken as JWT.Token
+
             let newDeviceToken = deviceToken.replacingOccurrences(of: " ", with: "")
             let url = tokenAuthenticationApplePushURL(with: _env, deviceToken: newDeviceToken)
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
+
             request.setValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             var apnstopic = bundleId
@@ -186,9 +199,9 @@ class DeMarcbenderInapppushModule: TiModule {
             else {
                 
             }
-
             request.setValue(apnstopic, forHTTPHeaderField: "apns-topic")
             request.setValue(payloadType, forHTTPHeaderField: "apns-push-type")
+            request.setValue("5", forHTTPHeaderField: "apns-priority")
             request.httpBody = payload.data(using: .utf8)
             
             let task = session.dataTask(with: request) { (data, response, error) in
@@ -205,8 +218,6 @@ class DeMarcbenderInapppushModule: TiModule {
                 } else {
                     errmsg = reason ?? error!.localizedDescription
                 }
-                self.resetConnect()
-
                 if ((callback) != nil){
                     callback!.call([["result": errmsg]], thisObject: self)
                 }
@@ -215,11 +226,9 @@ class DeMarcbenderInapppushModule: TiModule {
         }
         else {
             if ((callback) != nil){
-                self.resetConnect()
                 callback!.call([["result": "missing deviceToken and payload"]], thisObject: self)
             }
             else {
-                self.resetConnect()
                 return
             }
         }
