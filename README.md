@@ -59,11 +59,11 @@ inAppPushModule.setupPush({
 
 inAppPushModule.sendPushToUser({
               deviceToken : '000dc4dc79b05c81ec286d000f023f9ae0dd55780503d033dd9dd7f6ad000000', // deviceToken of user B
-              payloadType : 'background', // 'alert' or 'background' or 'voip' or 'complication' or 'fileprovider' or 'mdm'
+              payloadType : 'alert', // 'alert' or 'background' or 'voip' or 'complication' or 'fileprovider' or 'mdm'
               payload : {
                 'aps' : {
                   'alert' : 'Push test!', // message -- for silent push, if you want to show notification -> use local notification, because silent push does not trigger a visible notifiction
-                  'content-available' : 1, // for background silent-push
+                  // 'content-available' : 1, // for background silent-push
                   'sound' : 'default', // 'default' or path to sound file
                   'badge' : 1 // integer for updating the app-icon badge counter
                 }
