@@ -11,6 +11,7 @@ P2P push over Apple Push Services -- no own push server needed!
 - also silent push is possible - the app of user B will then wakeup and can perform some processing or download content in the timeframe Apple allows (about 30 seconds)
 
 MacCatalyst compatible
+Based on: https://github.com/nevermore-imba/RPush
 
 
 ## Methods
