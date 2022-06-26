@@ -218,8 +218,22 @@ class DeMarcbenderInapppushModule: TiModule {
                 } else {
                     errmsg = reason ?? error!.localizedDescription
                 }
-                if ((callback) != nil){
-                    callback!.call([["result": errmsg]], thisObject: self)
+                
+                if (errmsg == "ExpiredProviderToken"){
+                    NSLog("[DEBUG] new Token")
+
+                    let authToken = AuthenticationToken(keyId: self.keyId!, teamId: self.teamId!)
+                    if let privateKey = self._p8PrivateKey {
+                        self._jwtToken = try! authToken.generateJWTToken(fromP8PrivateKey: privateKey)
+                    } else {
+                        self._jwtToken = try! authToken.generateJWTToken(fromP8: self._p8FilePath)
+                    }
+                    self.sendPushToUser(arguments: arguments)
+                }
+                else {
+                    if ((callback) != nil){
+                        callback!.call([["result": errmsg]], thisObject: self)
+                    }
                 }
             }
             task.resume()
