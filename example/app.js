@@ -115,7 +115,7 @@ ti_inapppush.sendPushToUser({
                 'aps' : {
                   'alert' : 'Push test!', // message -- for silent push, if you want to show notification -> use local notification, because silent push does not trigger a visible notifiction
                   'content-available' : 1, // for background silent-push
-                  'sound' : 'default' // 'default' or path to sound file
+                  'sound' : 'default', // 'default' or path to sound file
                   'badge' : 1 // integer for updating the app-icon badge counter
                 }
               },
