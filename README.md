@@ -10,7 +10,7 @@ P2P push over Apple Push Services -- no own push server needed!
 - User A needs to know the deviceToken of user B, than user A can send push directly to user B
 - also silent push is possible - the app of user B will then wakeup and can perform some processing or download content in the timeframe Apple allows (about 30 seconds)
 
-MacCatalyst compatible
+MacCatalyst compatible<br/>
 Based on: https://github.com/nevermore-imba/RPush
 
 
