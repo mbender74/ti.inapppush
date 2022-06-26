@@ -170,7 +170,24 @@ class DeMarcbenderInapppushModule: TiModule {
             request.httpMethod = "POST"
             request.setValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.setValue(bundleId, forHTTPHeaderField: "apns-topic")
+            var apnstopic = bundleId
+            if (payloadType == "voip"){
+                apnstopic!.append(".voip")
+            }
+            else if (payloadType == "complication"){
+                apnstopic!.append(".complication")
+            }
+            else if (payloadType == "location"){
+                apnstopic!.append(".location-query")
+            }
+            else if (payloadType == "fileprovider"){
+                apnstopic!.append(".pushkit.fileprovider")
+            }
+            else {
+                
+            }
+
+            request.setValue(apnstopic, forHTTPHeaderField: "apns-topic")
             request.setValue(payloadType, forHTTPHeaderField: "apns-push-type")
             request.httpBody = payload.data(using: .utf8)
             
@@ -188,6 +205,8 @@ class DeMarcbenderInapppushModule: TiModule {
                 } else {
                     errmsg = reason ?? error!.localizedDescription
                 }
+                self.resetConnect()
+
                 if ((callback) != nil){
                     callback!.call([["result": errmsg]], thisObject: self)
                 }
@@ -196,9 +215,11 @@ class DeMarcbenderInapppushModule: TiModule {
         }
         else {
             if ((callback) != nil){
+                self.resetConnect()
                 callback!.call([["result": "missing deviceToken and payload"]], thisObject: self)
             }
             else {
+                self.resetConnect()
                 return
             }
         }

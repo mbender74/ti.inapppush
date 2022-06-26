@@ -31,7 +31,7 @@ Based on: https://github.com/nevermore-imba/RPush
 ### Properties
 
 * **deviceToken:**`STRING`<br/>deviceToken of user B (or user you want to send push to)
-* **payloadType**:`STRING`<br/>'**alert**' or '**background**' or '**voip**' or '**complication**' or '**fileprovider**' or '**mdm**'
+* **payloadType**:`STRING`<br/>'**alert**' or '**background**' or '**voip**' or '**complication**' or '**fileprovider**' or '**location**'
 * **payload**:`Object`<br/>the payload JSON object -> see example
 * **callback**:`JSFunction`<br/>optional, function that will be called after push send
 
@@ -59,7 +59,7 @@ inAppPushModule.setupPush({
 
 inAppPushModule.sendPushToUser({
               deviceToken : '000dc4dc79b05c81ec286d000f023f9ae0dd55780503d033dd9dd7f6ad000000', // deviceToken of user B
-              payloadType : 'alert', // 'alert' or 'background' or 'voip' or 'complication' or 'fileprovider' or 'mdm'
+              payloadType : 'alert', // 'alert' or 'background' or 'voip' or 'complication' or 'fileprovider' or 'location'
               payload : {
                 'aps' : {
                   'alert' : 'Push test!', // message -- for silent push, if you want to show notification -> use local notification, because silent push does not trigger a visible notifiction
